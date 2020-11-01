@@ -1,18 +1,45 @@
 const express = require('express')
-const { route } = require('.')
 const router = express.Router()
+const Author = require('../models/author')
 
-router.get('/',(req,resp)=>{
-    resp.render('authors/index')
+router.get('/',async (req,resp)=>{
+    let searchOptions = {}
+    if(req.query.name !=null && req.query.name !==''){
+        searchOptions.name = new RegExp(req.query.name,'i')
+    }
+    try{
+        const authors = await Author.find({})
+        resp.render('authors/index',{
+            authors:authors,
+            searchOptions:req.query
+        })
+
+    }catch{
+        resp.redirect('/')
+    }
 })
 
 router.get('/new',(req,resp)=>{
     // resp.send('You are at new Author Section')
-    resp.render('authors/new')
+    resp.render('authors/new',{
+        author:new Author()
+    })
 })
 
-router.post('/',(req,resp)=>{
-    resp.send(req.body.name)
+router.post('/',async (req,resp)=>{
+    const author = new Author({
+        name:req.body.name
+    })
+    try{
+        const newAuthor = await author.save()
+        resp.redirect('authors')
+    }catch{
+        resp.render('authors/new',{
+            author:author,
+            errorMessage:'Error Creating New Author'
+        })
+    }
+    // resp.send(req.body.name)
 })
 
 module.exports = router
