@@ -3,7 +3,7 @@ const { route } = require('.')
 const router = express.Router()
 
 router.get('/',(req,resp)=>{
-    resp.send('You are on the base Route of Authors')
+    resp.render('authors/index')
 })
 
 router.get('/new',(req,resp)=>{
