@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 
 
 const indexRoute =require('./routes/index')
+const authorRoute = require('./routes/authors')
 
 app.set('view engine', 'ejs')
 app.set('views',__dirname+'/views')
@@ -16,5 +17,6 @@ app.use(bodyParser.urlencoded({
 }))
 
 app.use('/',indexRoute)
+app.use('/authors',authorRoute)
 
 app.listen(process.env.PORT || 3030)
